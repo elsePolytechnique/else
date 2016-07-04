@@ -11,4 +11,5 @@ Say your *else-www* repository path is `$repo`.
 1. Install dependencies :
    ```
    pip install django
+   pip install djangorestframework
    ```
