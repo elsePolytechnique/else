@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for else project.
 
@@ -37,9 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'membre',
 ]
 
 MIDDLEWARE_CLASSES = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,12 +72,16 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'else.wsgi.application'
+ROOT_URLCONF = 'else.urls'
+
+#WSGI_APPLICATION = 'else.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+
+#bdd sqlite, tu es sûr ?
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -119,3 +127,56 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Rest framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.ModelSerializer',
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'bars_core.perms.RootBarPermissionsOrAnonReadOnly',
+        # 'rest_framework.permissions.AllowAny',
+        # 'bars_core.perms.PerBarPermissionsOrAnonReadOnly',
+        'rest_framework.permissions.DjangoObjectPermissions',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # TODO: remove
+        'rest_framework.authentication.BasicAuthentication',  # TODO: remove
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter'
+    ),
+    'PAGE_SIZE': 10,
+    'COERCE_DECIMAL_TO_STRING': False,
+}
+
+#AUTHENTICATION_BACKENDS = (
+#    'bars_core.auth.AuthenticationBackend',
+#    'bars_core.perms.PermissionBackend',
+#)
+
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=24),  # Todo: temporary
+}
+
+# Permissions
+
+#PERMISSION_CHECK_PERMISSION_PRESENCE = False
+#PERMISSION_DEFAULT_APL_ANY_PERMISSION = False
+#PERMISSION_DEFAULT_APL_CHANGE_PERMISSION = True
+#PERMISSION_DEFAULT_APL_DELETE_PERMISSION = False
+
+# CORS headers
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+
+# API app
+
+AUTH_USER_MODEL = 'membres.Membre'
+
