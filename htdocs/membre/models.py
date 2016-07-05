@@ -29,26 +29,51 @@ class Membre(AbstractBaseUser):
     class Meta:
         app_label = 'membres'
 
-    username = CharField(max_length=128, unique=True)
-    firstname = CharField(max_length=128, blank=True)
-    lastname = CharField(max_length=128, blank=True)
-    email = EmailField(max_length=254, blank=True)
+    #username = CharField(max_length=128, unique=True)
+    email = EmailField(max_length=254, unique=True) # one user by email, no username
 
-    is_active = BooleanField(default=True)
+    GENDER_CHOICES = (
+            ('M.','Monsieur'),
+            ('Mme','Madame'),
+            )
+    gender = CharField(max_length=3,choices=GENDER_CHOICES,default=GENDER_CHOICES[0][0])
+    firstname = CharField(max_length=128, blank=False) # First and last name are mandatory
+    lastname = CharField(max_length=128, blank=False)
+    # phone = # didn't know how to check validity
+    PROMOTIONS = [
+            ('X',2009,2015),
+            ('ENSTA',2013,2016),
+            ('IOGS',2013,2016),
+            ]
+    PROMOTIONS_CHOICES = [ ('XDoc','Doctorant') ]
+    for x in PROMOTIONS:
+        PROMOTIONS_CHOICES += [ (x[0]+str(i),x[0]+str(i)) for i in range(x[1],x[2]+1) ]
+    promotion = CharField(max_length=32, choices=PROMOTIONS_CHOICES, default='X2015',blank=False)
+
+    GROUP_TYPES = [
+            ('Bar','Bar'),
+            ('Binet','Binet'),
+            ('Événement','Événement'),
+            ('Association','Association'),
+            ]
+    group_type = CharField(max_length=32, choices=GROUP_TYPES, blank=True) # how to put default "blank" ?
+    group = CharField(max_length=128, blank=True)
+    activity = TextField(max_length=256, blank=True)
+
+    is_active = BooleanField(default=True) # maybe default False for account validation ?
     last_modified = DateTimeField(auto_now=True)
+    created = DateTimeField(auto_now=True)
 
     is_superuser = BooleanField(default=False)
+    is_admin = BooleanField(default=False)
     is_staff = BooleanField(default=False)
 
     previous_login = DateTimeField(blank=True, auto_now_add=True)
     current_login = DateTimeField(blank=True, auto_now_add=True)
 
-    #ajoute les champs que tu veux, genre : 
-    authorised = BooleanField(default=False)
-
     objects = MembreManager()
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     def has_perm(self, perm, obj=None):
@@ -68,7 +93,7 @@ class Membre(AbstractBaseUser):
         return _user_has_module_perms(self, app_label)
 
     def get_short_name(self):
-        return self.username
+        return self.get_full_name()
 
     def get_full_name(self):
         return "%s %s" % (self.firstname, self.lastname)
