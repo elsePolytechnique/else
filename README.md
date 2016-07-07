@@ -12,4 +12,5 @@ Say your *else-www* repository path is `$repo`.
    ```
    pip install django
    pip install djangorestframework
+   pip install djangorestframework-jwt
    ```
