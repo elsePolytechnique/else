@@ -40,6 +40,8 @@ class Member(AbstractBaseUser):
     firstname = CharField(max_length=128, blank=False) # First and last name are mandatory
     lastname = CharField(max_length=128, blank=False)
     # phone = # didn't know how to check validity
+    
+    promotion = CharField(max_length=32, default='X2015',blank=False)
 
     GROUP_TYPES = [
             ('Bar','Bar'),
@@ -66,6 +68,19 @@ class Member(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+    
+    def __init__(self, *args, **kwargs):
+        super(MyForm, self).__init__(*args, **kwargs)
+        PROMOTIONS = [
+            ('X',2009,2015),
+            ('ENSTA',2013,2016),
+            ('IOGS',2013,2016),
+        ]
+        PROMOTIONS_CHOICES = [ ('XDoc','Doctorant') ]
+        for x in PROMOTIONS:
+            PROMOTIONS_CHOICES += [ (x[0]+str(i),x[0]+str(i)) for i in range(x[1],x[2]+1) ]
+
+        self.fields['promotion'].choices = PROMOTIONS_CHOICES
 
     def has_perm(self, perm, obj=None):
         if self.is_active and self.is_superuser:
