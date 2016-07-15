@@ -40,7 +40,7 @@ class Member(AbstractBaseUser):
     firstname = CharField(max_length=128, blank=False) # First and last name are mandatory
     lastname = CharField(max_length=128, blank=False)
     # phone = # didn't know how to check validity
-    
+
     promotion = CharField(max_length=32, default='X2015',blank=False)
 
     GROUP_TYPES = [
@@ -68,7 +68,7 @@ class Member(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-    
+
     def __init__(self, *args, **kwargs):
         super(MyForm, self).__init__(*args, **kwargs)
         PROMOTIONS = [

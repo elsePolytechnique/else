@@ -11,7 +11,7 @@ from rest_framework import decorators
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 
-class Produit(models.Model):
+class Product(models.Model):
     name = CharField(max_length=128, blank=False)
     subname = CharField(max_length=128, blank=False)
     supplier = ForeignKey('Fournisseur')
@@ -36,3 +36,17 @@ class Produit(models.Model):
             ('friday','vendredi'),
             ]
     delivery = CharField(max_length=32,choices=DELIVERY_DAYS,blank=True)
+
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        read_only_fields = ()
+
+    def create(self,data):
+        u = super(ProductSerializer, self).create(data)
+        u.save()
+        return u
+
+class ProductViewSet(ModelViewSet):
+    queryset = Member.objects.filter(available='available')
+    serializer_class = ProductSerializer
