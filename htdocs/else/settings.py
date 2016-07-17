@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     
     'member',
+    'product',
 ]
 
 MIDDLEWARE_CLASSES = [

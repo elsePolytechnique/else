@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models import CharField, EmailField, BooleanField, DateTimeField, TextField, ImageField, ForeignKey
+from django.db.models import CharField, BooleanField, TextField, ImageField, ForeignKey, FloatField
 
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 from rest_framework.viewsets import ModelViewSet
@@ -48,5 +48,5 @@ class ProductSerializer(ModelSerializer):
         return u
 
 class ProductViewSet(ModelViewSet):
-    queryset = Member.objects.filter(available='available')
+    queryset = Product.objects.filter(available='available')
     serializer_class = ProductSerializer

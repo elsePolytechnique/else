@@ -17,10 +17,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from member.models import MemberViewSet
+from product.models import ProductViewSet
 
 router = routers.DefaultRouter()
 
 router.register('members', MemberViewSet)
+router.register('products', ProductViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
