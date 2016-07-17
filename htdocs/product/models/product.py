@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-from django.db import models
-from django.db.models import CharField, BooleanField, TextField, ImageField, ForeignKey, FloatField
+from django.db.models import Model, CharField, BooleanField, TextField, ImageField, ForeignKey, FloatField
 
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.decorators import list_route, permission_classes
-from rest_framework import decorators
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from product.models.supplier import SupplierSerializer
+from product.models.category import Category
 
-class Product(models.Model):
+class Product(Model):
     name = CharField(max_length=128, blank=False)
     subname = CharField(max_length=128, blank=False)
-    supplier = ForeignKey('Fournisseur')
+    supplier = ForeignKey('Supplier')
     description = TextField()
-    category = ForeignKey('Categorie')
+    category = ForeignKey('Category')
     photo = ImageField()
     price = FloatField()
     default_qtt = FloatField()
@@ -36,11 +33,20 @@ class Product(models.Model):
             ('friday','vendredi'),
             ]
     delivery = CharField(max_length=32,choices=DELIVERY_DAYS,blank=True)
+    
+    class Meta:
+        app_label = 'product'
 
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         read_only_fields = ()
+        
+    #si tu veux que category soit affiché et renseigné (à la création) comme un identifiant : 
+    category = PrimaryKeyRelatedField(queryset=Category.objects.all())
+    
+    #si tu veux que supplier soit affiché et renseigné (à la création) comme l'ensemble de ses champs : 
+    supplier = SupplierSerializer()
 
     def create(self,data):
         u = super(ProductSerializer, self).create(data)
@@ -50,3 +56,4 @@ class ProductSerializer(ModelSerializer):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.filter(available='available')
     serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, )
