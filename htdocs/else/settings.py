@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
     
-    'membre',
+    'member',
+    'product',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -178,5 +181,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # API app
 
-AUTH_USER_MODEL = 'membres.Membre'
+AUTH_USER_MODEL = 'member.Member'
 
